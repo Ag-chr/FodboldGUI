@@ -4,15 +4,13 @@ from tkinter import *
 from tkinter.ttk import * #progressbar
 from tkinter import messagebox
 
-
+from hjælpeFunktioner import gem
 from listWindow import listWindowClass
-from payWindow import payWindowClass
+from betalUdtrækWindow import payWindowClass
 from worstWindow import worstWindowClass
 
 class mainWindow:
     def __init__(self):
-
-
         self.total = 0
         self.target = 1
 
@@ -27,9 +25,12 @@ class mainWindow:
             self.fodboldtur = pickle.load(infile)
             infile.close()
         except: #FILEN FINDES IKKE.
-            ##TODO: open file??
-            ##TODONE: warn a brother
-            messagebox.showerror(parent=self.root, title="GWAAAAAAA", message="FILEN ER IKKE FUNDET!!")
+            self.fodboldtur = {"Abdi": 300, "Abdul": 3, "Abdirashid": 30000, "Abdirahim": 10000, "Zakaria": 10}
+            messagebox.showerror(parent=self.root, title="SUUIIII", message="FILEN BLEV IKKE FUNDET. Derfor laves en ny. Genåben program igen")
+            with open(self.filename, 'wb') as file:
+                pickle.dump(self.fodboldtur, file)
+                self.fodboldtur = pickle.load(file)
+
         print(self.fodboldtur)
         self.total = sum(self.fodboldtur.values())
         print(f"TOTAL: {self.total}")
@@ -50,6 +51,7 @@ class mainWindow:
         self.progress['value'] = self.total/self.target*100
         #print(self.progress['length'])
         #print(self.progress['value'])
+
         #BUTTONS
         self.progress.pack(padx= 20)
 
@@ -66,10 +68,10 @@ class mainWindow:
         # infinite loop
         mainloop()
     def gemFilen(self):
-        outfile = open(self.filename, 'wb')
-        pickle.dump(self.fodboldtur, outfile)
-        outfile.close()
+        gem(self.filename, self.fodboldtur)
         print("GEMT")
 
 if __name__ == '__main__':
     main = mainWindow()
+
+print("spell ICUP")

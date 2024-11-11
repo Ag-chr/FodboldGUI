@@ -2,6 +2,8 @@
 from tkinter import *
 from tkinter import messagebox
 
+
+
 class payWindowClass:
 
     def __init__(self, master):
@@ -11,7 +13,11 @@ class payWindowClass:
         self.payWindow.geometry("200x200")
 
         Label(self.payWindow,
-              text="Indbetal").pack()
+              text="Indbetal eller udtræk").pack()
+
+        clicked = StringVar()
+
+
 
         self.money = Entry(self.payWindow)
         self.money.pack()
