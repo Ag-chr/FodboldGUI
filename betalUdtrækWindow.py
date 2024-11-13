@@ -11,42 +11,63 @@ class payWindowClass:
         self.payWindow = Toplevel(self.master.root)
         self.payWindow.title("Pay Window")
 
-        Label(self.payWindow,
-              text="Indbetal eller udtræk").grid(row=0, column=0, padx=10, pady=10, columnspan=10)
+        # Top
+        Label(self.payWindow, text="Indbetal eller udtræk").pack(side=TOP)
 
+        # Bottom
+
+        scrollbar = Scrollbar(self.payWindow)
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        self.logList = Listbox(self.payWindow, yscrollcommand=scrollbar.set)
+        self.logList.pack(side=BOTTOM)
+
+        scrollbar.config(command=self.logList.yview)
+        Label(self.payWindow, text="Log").pack(side=BOTTOM)
+
+        self.personMoney = StringVar()
+        self.personMoney.set("Beløb indbetalt: ---")
+
+        self.personMoneyLabel = Label(self.payWindow, text=self.personMoney.get())
+        self.personMoneyLabel.pack(side=BOTTOM)
+
+        # Left
         self.valgtPerson = StringVar()
-        #TODO: sortere liste alfabetisk
+        # TODO: sortere liste alfabetisk
         self.options = [p for p in self.master.fodboldtur]
         self.valgtPerson.set("Vælg person")
 
-        # row 1
-        self.drop = OptionMenu(self.payWindow, self.valgtPerson, *self.options)
-        self.drop.grid(row=1, column=0, pady=10)
+        self.drop = OptionMenu(self.payWindow, self.valgtPerson, *self.options, command=lambda person: self.updateInfo(person))
+        self.drop.pack(side=LEFT, fill=BOTH, expand=True)
 
-        Label(self.payWindow, text="Skriv beløb:").grid(row=1, column=1, pady=10)
+        Label(self.payWindow, text="Skriv beløb:").pack(side=LEFT, fill=BOTH)
 
         self.moneyEntry = Entry(self.payWindow)
-        self.moneyEntry.grid(row=1, column=2, pady=10, columnspan=3)
+        self.moneyEntry.pack(side=LEFT, fill=BOTH, expand=True)
 
-        Label(self.payWindow, text="kr.").grid(row=1, column=5, pady=10)
+        Label(self.payWindow, text="kr.").pack(side=LEFT, fill=BOTH)
 
-        # row 2
         self.button = Button(self.payWindow, text="betal", command=lambda: self.addMoney(self.validere_beløb(self.moneyEntry.get())))
-        self.button.grid(row=2, column=2, padx=10, pady=10)
+        self.button.pack(side=LEFT, fill=BOTH, expand=True)
 
         self.button = Button(self.payWindow, text="udtræk", command=lambda: self.addMoney(-self.validere_beløb(self.moneyEntry.get())))
-        self.button.grid(row=2, column=4, padx=10, pady=10)
+        self.button.pack(side=LEFT, fill=BOTH, expand=True)
 
     def addMoney(self, amount):
-        if self.valgtPerson.get() not in self.master.fodboldtur:
+        person = self.valgtPerson.get()
+
+        if person not in self.master.fodboldtur:
             messagebox.showerror(parent=self.payWindow, title="SUUIIII", message="Vælg en person")
 
-        self.master.fodboldtur[self.valgtPerson.get()] += amount
+        self.master.fodboldtur[person] += amount
         self.master.total += amount
         self.master.progressLabelText.set(f"Indsamlet: {self.master.total} af {self.master.target} kroner:")
-        print(f"Indsamlet: {self.master.total} af {self.master.target} kroner!")
         self.master.progress['value'] = self.master.total / self.master.target * 100
-        ##TODO: TELL MAIN WINDOW TO PICKLE THE DICTIONARY
+
+        self.updateLog(person, amount)
+        self.updateInfo(person)
+
+        print(f"Indsamlet: {self.master.total} af {self.master.target} kroner!")
         print(self.master.fodboldtur)
         self.master.gemFilen()
 
@@ -57,3 +78,19 @@ class payWindowClass:
             messagebox.showerror(parent=self.payWindow, title="Beløb fejl!", message="Prøv igen.\nKun hele tal!")
             return "FEJL"
         return input
+
+    def updateInfo(self, person):
+        self.personMoney.set(f"Beløb indbetalt: {self.master.fodboldtur[person]}")
+        self.personMoneyLabel.configure(text=self.personMoney.get())
+
+        self.logList.delete(0, END)
+        personLog = self.master.log[person]
+        for mængde in personLog:
+            self.logList.insert(END, mængde)
+
+    def updateLog(self, person, beløb):
+        self.master.log[person].insert(0, beløb)
+
+
+
+

@@ -3,6 +3,7 @@ import pickle
 from tkinter import *
 from tkinter.ttk import * #progressbar
 from tkinter import messagebox
+from collections import defaultdict
 
 from hjælpeFunktioner import gem
 from listWindow import listWindowClass
@@ -20,16 +21,31 @@ class mainWindow:
         #load filen:
         self.filename = 'betalinger.pk'
         self.fodboldtur = {}
+
+        self.fileLog = 'log.pk'
+        self.log = defaultdict(list)
+
         try: #FILEN FINDES :)
             infile = open(self.filename, 'rb')
             self.fodboldtur = pickle.load(infile)
             infile.close()
+
+            infile = open(self.fileLog, 'rb')
+            self.log = pickle.load(infile)
+            infile.close()
+
         except: #FILEN FINDES IKKE.
             self.fodboldtur = {"Abdi": 300, "Abdul": 3, "Abdirashid": 30000, "Abdirahim": 10000, "Zakaria": 10}
-            messagebox.showerror(parent=self.root, title="SUUIIII", message="FILEN BLEV IKKE FUNDET. Derfor laves en ny. Genåben program igen")
-            with open(self.filename, 'wb') as file:
-                pickle.dump(self.fodboldtur, file)
-                self.fodboldtur = pickle.load(file)
+            messagebox.showerror(parent=self.root, title="SUUIIII", message="FILEN BLEV IKKE FUNDET. Derfor laves en ny")
+
+            infile = open(self.filename, 'wb')
+            pickle.dump(self.fodboldtur, infile)
+            infile.close()
+
+            infile = open(self.fileLog, 'wb')
+            pickle.dump(self.log, infile)
+            infile.close()
+
 
         print(self.fodboldtur)
         self.total = sum(self.fodboldtur.values())
@@ -69,6 +85,7 @@ class mainWindow:
         mainloop()
     def gemFilen(self):
         gem(self.filename, self.fodboldtur)
+        gem(self.fileLog, self.log)
         print("GEMT")
 
 if __name__ == '__main__':
