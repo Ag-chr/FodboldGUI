@@ -91,4 +91,4 @@ class mainWindow:
 if __name__ == '__main__':
     main = mainWindow()
 
-print("spell ICUP")
+print("Nicolas Jackson In Action With The Cold Reaction")
