@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter.ttk import * #progressbar
 from tkinter import messagebox
 from collections import defaultdict
+from indstillinger import NameEditorApp
 
 from hjælpeFunktioner import gem
 from listWindow import listWindowClass
@@ -13,7 +14,8 @@ from worstWindow import worstWindowClass
 class mainWindow:
     def __init__(self):
         self.total = 0
-        self.target = 70000
+        self.target = 1
+        self.dkk_pr_medlem = 4500 #Standard mængde
 
         # creating tkinter window
         self.root = Tk()
@@ -48,8 +50,8 @@ class mainWindow:
 
 
         print(self.fodboldtur)
-        self.total = sum(self.fodboldtur.values())
-        print(f"TOTAL: {self.total}")
+        #self.total = sum(self.fodboldtur.values())
+        #print(f"TOTAL: {self.total}")
 
 
         #TEXT:
@@ -78,11 +80,21 @@ class mainWindow:
         payButton = Button(self.root,text ="Indbetal",command = lambda: payWindowClass(self))
         payButton.pack(padx = 20, pady = 10,side=LEFT)
 
-        bottom3Button = Button(self.root,text ="Bund 3",command = lambda: worstWindowClass(self))
-        bottom3Button.pack(padx = 20, pady = 10,side=LEFT)
+        nameEditorButton = Button(self.root, text="Rediger navne", command=lambda: NameEditorApp(self, self.fodboldtur))
+        nameEditorButton.pack(padx=20, pady=10, side=LEFT)
 
+        # Updater for progress bar
+        self.update_target()
         # infinite loop
         mainloop()
+
+    def update_target(self):
+        """Updates the progressbar pretty much (the values used)"""
+        self.target = len(self.fodboldtur) * self.dkk_pr_medlem
+        self.total = sum(self.fodboldtur.values())  # Update the total amount
+        self.progressLabelText.set(f"Indsamlet: {self.total} af {self.target} kroner:")
+        self.progress['value'] = self.total / self.target * 100  # Update progress bar value
+
     def gemFilen(self):
         gem(self.filename, self.fodboldtur)
         gem(self.fileLog, self.log)
