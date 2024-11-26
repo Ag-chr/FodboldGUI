@@ -13,7 +13,7 @@ from worstWindow import worstWindowClass
 class mainWindow:
     def __init__(self):
         self.total = 0
-        self.target = 1
+        self.target = 70000
 
         # creating tkinter window
         self.root = Tk()
