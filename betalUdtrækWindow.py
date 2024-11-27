@@ -1,6 +1,7 @@
 # importing tkinter module
 from tkinter import *
 from tkinter import messagebox
+from datetime import datetime
 
 
 
@@ -92,11 +93,11 @@ class payWindowClass:
 
         self.logList.delete(0, END)
         personLog = self.master.log[person]
-        for mængde in personLog:
-            self.logList.insert(END, mængde)
+        for i in personLog:
+            self.logList.insert(END, f"{i[0]}, {i[1]}")
 
     def updateLog(self, person, beløb):
-        self.master.log[person].insert(0, beløb)
+        self.master.log[person].insert(0, (beløb, datetime.now()))
 
 
 
