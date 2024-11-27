@@ -64,7 +64,7 @@ class payWindowClass:
             return
         elif self.master.fodboldtur[person] + amount < 0:
             amount = -self.master.fodboldtur[person]
-        if self.master.fodboldtur[person] + amount == 0:
+        elif self.master.fodboldtur[person] + amount == 0:
             return
 
         self.master.fodboldtur[person] += amount
