@@ -16,10 +16,13 @@ class listWindowClass:
 
         self.df = pd.DataFrame.from_dict(fodboldturDict)
         self.order=True
+        self.l1 = list(self.df)  # list of columns
 
         # Overskrift
         Label(self.listWindow, text="Indbetalingsliste").pack(pady=10)
 
+        self.trv = Treeview(self.listWindow, selectmode='browse', show="headings", height=10, columns=self.l1)
+        self.trv.pack()
         #Laver en tabel
         self.my_disp()
 
@@ -27,13 +30,10 @@ class listWindowClass:
         Button(self.listWindow, text="Tilbage", command=self.listWindow.destroy).pack()
 
     def my_disp(self):
-        l1 = list(self.df) # list of columns
         r_set = self.df.to_numpy().tolist()
-        print("l1:", l1)
+        print("l1:", self.l1)
         print("r_set:", r_set)
-        self.trv = Treeview(self.listWindow, selectmode='browse', show="headings", height=10, columns=l1)
-        self.trv.pack()
-        for col in l1:
+        for col in self.l1:
             self.trv.column(col, width=100, anchor='w')
             self.trv.heading(col, text=col, command=lambda col=col: self.my_sort(col))
         for dt in r_set:
@@ -46,7 +46,7 @@ class listWindowClass:
         else:
             self.order = True
         self.df = self.df.sort_values([col], ascending=self.order)
-        self.trv.pack_forget()
+        self.trv.delete(*self.trv.get_children())
         self.my_disp()
 
     def FyldTabel(self):
