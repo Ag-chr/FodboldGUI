@@ -29,7 +29,7 @@ class NameEditorApp:
         self.add_name_label.place(x=screen_width//5, y=120)
         self.add_name_entry = tk.Entry(self.window, font=("Helvetica", 18), width=20)
         self.add_name_entry.place(x=screen_width//5, y=160)
-        self.add_button = tk.Button(self.window, text="Tilføj", font=("Helvetica", 18), command=self.add_name)
+        self.add_button = tk.Button(self.window, text="Tilføj", font=("Helvetica", 18),width=18, command=self.add_name)
         self.add_button.place(x=screen_width//5, y=200)
 
         # Members List Section
