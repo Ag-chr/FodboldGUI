@@ -40,26 +40,31 @@ class payWindowClass:
         self.valgtPerson.set("Vælg person")
 
         self.drop = OptionMenu(self.payWindow, self.valgtPerson, *self.options, command=lambda person: self.updateInfo(person))
-        self.drop.pack(side=LEFT, fill=BOTH, expand=True)
+        self.drop.pack(side=LEFT, fill=X, expand=True)
 
         Label(self.payWindow, text="Skriv beløb:").pack(side=LEFT, fill=BOTH)
 
         self.moneyEntry = Entry(self.payWindow)
         self.moneyEntry.pack(side=LEFT, fill=BOTH, expand=True)
 
-        Label(self.payWindow, text="kr.").pack(side=LEFT, fill=BOTH)
+        Label(self.payWindow, text="kr.").pack(side=LEFT, fill=X)
 
         self.button = Button(self.payWindow, text="betal", command=lambda: self.addMoney(self.validere_beløb(self.moneyEntry.get())))
-        self.button.pack(side=LEFT, fill=BOTH, expand=True)
+        self.button.pack(side=LEFT, fill=X, expand=True)
 
         self.button = Button(self.payWindow, text="udtræk", command=lambda: self.addMoney(-self.validere_beløb(self.moneyEntry.get())))
-        self.button.pack(side=LEFT, fill=BOTH, expand=True)
+        self.button.pack(side=LEFT, fill=X, expand=True)
 
     def addMoney(self, amount):
         person = self.valgtPerson.get()
 
         if person not in self.master.fodboldtur:
             messagebox.showerror(parent=self.payWindow, title="SUUIIII", message="Vælg en person")
+            return
+        elif self.master.fodboldtur[person] + amount < 0:
+            amount = -self.master.fodboldtur[person]
+        if self.master.fodboldtur[person] + amount == 0:
+            return
 
         self.master.fodboldtur[person] += amount
         self.master.total += amount
