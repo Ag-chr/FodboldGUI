@@ -35,7 +35,7 @@ class listWindowClass:
     def FyldTabel(self):
         # Fylder tabellen  med data
         for navn, indbetalt in self.master.fodboldtur.items():
-            resterende = self.master.target - indbetalt  # Beregn resterende beløb
+            resterende = self.master.dkk_pr_medlem - indbetalt  # Beregn resterende beløb
             self.tree.insert("", END, values=(navn, f"{indbetalt} kr", f"{resterende} kr"))
 
 
