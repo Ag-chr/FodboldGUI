@@ -17,7 +17,7 @@ class NameEditorApp:
         screen_width = self.window.winfo_screenwidth()
         screen_height = self.window.winfo_screenheight()
         self.window.geometry(f"{screen_width}x{screen_height}")
-        self.window.config(padx=10, pady=10) 
+        self.window.config(padx=10, pady=10)
         self.window.resizable(True, True)
 
         # Title Label
@@ -29,7 +29,7 @@ class NameEditorApp:
         self.add_name_label.place(x=screen_width//5, y=120)
         self.add_name_entry = tk.Entry(self.window, font=("Helvetica", 18), width=20)
         self.add_name_entry.place(x=screen_width//5, y=160)
-        self.add_button = tk.Button(self.window, text="Tilføj", font=("Helvetica", 18), command=self.add_name)
+        self.add_button = tk.Button(self.window, text="Tilføj", font=("Helvetica", 18),width=18, command=self.add_name)
         self.add_button.place(x=screen_width//5, y=200)
 
         # Members List Section
@@ -38,8 +38,8 @@ class NameEditorApp:
         self.list_frame = tk.Frame(self.window)
         self.list_frame.place(x=screen_width//2 - 100, y=160)
             #scroller;
-        self.canvas = tk.Canvas(self.list_frame, height=200, width=300) 
-        self.canvas.grid(row=0, column=0, padx=5, pady=5) 
+        self.canvas = tk.Canvas(self.list_frame, height=200, width=300)
+        self.canvas.grid(row=0, column=0, padx=5, pady=5)
         self.scrollbar = tk.Scrollbar(self.list_frame, orient="vertical", command=self.canvas.yview)
         self.scrollbar.grid(row=0, column=1, sticky="ns")
 
@@ -91,10 +91,10 @@ class NameEditorApp:
         """Add a new name to the list"""
         name = self.add_name_entry.get()
         if name and name not in self.fodboldtur:
-            self.fodboldtur[name] = 0  # Add the name with initial payment 0
+            self.fodboldtur[name] = 0
             self.names.append(name)
             self.update_listbox()
-            self.parent.gemFilen()  # Save updated data to file
+            self.parent.gemFilen()
         self.add_name_entry.delete(0, tk.END)
 
     def edit_name(self, event):
@@ -104,7 +104,7 @@ class NameEditorApp:
             old_name = self.name_listbox.get(selected)
             new_name = simpledialog.askstring("Rediger navn", f"Ændr navn '{old_name}':", initialvalue=old_name)
             if new_name and new_name not in self.fodboldtur:
-                self.fodboldtur[new_name] = self.fodboldtur.pop(old_name)  # Rename in fodboldtur
+                self.fodboldtur[new_name] = self.fodboldtur.pop(old_name)  # Rename people in indstillinger
                 self.names[selected[0]] = new_name
                 self.update_listbox()
                 self.parent.gemFilen()  # Save updated data to file
@@ -119,8 +119,8 @@ class NameEditorApp:
             self.update_listbox()
             self.parent.gemFilen()  # Save updated data to file
 
-    def edit_price(self):
-        """Set price per member"""
+    def edit_price(self): #TODO make it overwrite the hardcoded 4500
+        """Change price pr member"""
         new_price = simpledialog.askinteger("Rediger pris", "Indtast ny pris pr medlem:", initialvalue=self.dkk_pr_medlem)
         if new_price is not None:
             self.dkk_pr_medlem = new_price
@@ -131,6 +131,6 @@ class NameEditorApp:
 
     def close_window(self):
         """Save data and close the window"""
-        self.parent.update_target()  # Update the progress bar in the main window
-        self.parent.gemFilen()  # Save data to file
+        self.parent.update_target()  # Update progressbar
+        self.parent.gemFilen()
         self.window.destroy()
