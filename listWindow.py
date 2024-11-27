@@ -35,7 +35,7 @@ class listWindowClass:
         self.trv.pack()
         for col in l1:
             self.trv.column(col, width=100, anchor='w')
-            self.trv.heading(col, text=col, command=lambda: self.my_sort(col))
+            self.trv.heading(col, text=col, command=lambda col=col: self.my_sort(col))
         for dt in r_set:
             v = [r for r in dt]
             self.trv.insert('', 'end', values=v)
