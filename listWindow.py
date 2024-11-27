@@ -9,10 +9,10 @@ class listWindowClass:
         self.listWindow.title("Indbetalingsliste")
         self.listWindow.geometry("700x501")
 
-        print(self.master.fodboldtur)
-        fodboldturDict = {"Navn": self.master.fodboldtur.keys(), "Indbetalt": self.master.fodboldtur.values()}
-        resterndelist = [self.master.dkk_pr_medlem - indbetalt for indbetalt in fodboldturDict["Indbetalt"]]
-        fodboldturDict["Resterende"] = resterndelist
+        fodboldturDict = {}
+        fodboldturDict["Navn"] = self.master.fodboldtur.keys()
+        fodboldturDict["Indbetalt"] = self.master.fodboldtur.values()
+        fodboldturDict["Resterende"] = [self.master.dkk_pr_medlem - indbetalt for indbetalt in fodboldturDict["Indbetalt"]]
 
         self.df = pd.DataFrame.from_dict(fodboldturDict)
         self.order=True
@@ -31,10 +31,8 @@ class listWindowClass:
 
     def my_disp(self):
         r_set = self.df.to_numpy().tolist()
-        print("l1:", self.l1)
-        print("r_set:", r_set)
         for col in self.l1:
-            self.trv.column(col, width=100, anchor='w')
+            self.trv.column(col, width=200, anchor='w')
             self.trv.heading(col, text=col, command=lambda col=col: self.my_sort(col))
         for dt in r_set:
             v = [r for r in dt]
