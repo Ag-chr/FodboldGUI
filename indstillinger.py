@@ -13,41 +13,33 @@ class NameEditorApp:
         self.window = tk.Toplevel(parent.root)
         self.window.title("Indstillinger")
 
-        # Get screen resolution to scale the window
+        # Scale window to resolution
         screen_width = self.window.winfo_screenwidth()
         screen_height = self.window.winfo_screenheight()
-
-        # Set the window to fill the screen
         self.window.geometry(f"{screen_width}x{screen_height}")
-        self.window.config(padx=10, pady=10)  # Reduced padding around window
+        self.window.config(padx=10, pady=10)
+        self.window.resizable(True, True)
 
         # Title Label
         self.title_label = tk.Label(self.window, text="Indstillinger", font=("Helvetica", 30))
         self.title_label.place(x=screen_width//2 - 100, y=40, anchor="center")
 
-        # Add New Member Section
+        # Add new members
         self.add_name_label = tk.Label(self.window, text="Tilføj Ny Medlem:", font=("Helvetica", 18))
         self.add_name_label.place(x=screen_width//5, y=120)
-
         self.add_name_entry = tk.Entry(self.window, font=("Helvetica", 18), width=20)
         self.add_name_entry.place(x=screen_width//5, y=160)
-
         self.add_button = tk.Button(self.window, text="Tilføj", font=("Helvetica", 18), command=self.add_name)
         self.add_button.place(x=screen_width//5, y=200)
 
         # Members List Section
         self.members_label = tk.Label(self.window, text="Medlemmer", font=("Helvetica", 18))
         self.members_label.place(x=screen_width//2, y=120)
-
-        # Create a frame to hold the Listbox and the Scrollbar
         self.list_frame = tk.Frame(self.window)
         self.list_frame.place(x=screen_width//2 - 100, y=160)
-
-        # Create a Canvas widget for scrolling
+            #scroller;
         self.canvas = tk.Canvas(self.list_frame, height=200, width=300)
         self.canvas.grid(row=0, column=0, padx=5, pady=5)
-
-        # Create a Scrollbar linked to the canvas
         self.scrollbar = tk.Scrollbar(self.list_frame, orient="vertical", command=self.canvas.yview)
         self.scrollbar.grid(row=0, column=1, sticky="ns")
 
@@ -66,11 +58,11 @@ class NameEditorApp:
         self.name_listbox = self.listbox
         self.name_listbox.bind("<Double-1>", self.edit_name)
 
-        # Delete button
+        # Delete members
         self.delete_button = tk.Button(self.window, text="Slet", font=("Helvetica", 18), command=self.delete_member)
         self.delete_button.place(x=screen_width//2 - 50, y=350)
 
-        # Price per Member Section
+        # Price pr. member
         self.price_label = tk.Label(self.window, text="Pris pr medlem:", font=("Helvetica", 18))
         self.price_label.place(x=screen_width*3/4, y=120)
 
@@ -80,18 +72,17 @@ class NameEditorApp:
         self.edit_price_button = tk.Button(self.window, text="Rediger pris", font=("Helvetica", 18), command=self.edit_price)
         self.edit_price_button.place(x=screen_width*3/4, y=200)
 
-        # Back button (Gem og Luk)
+        # Gem og luk button
         self.back_button = tk.Button(self.window, text="Gem og Luk", font=("Helvetica", 18), command=self.close_window)
         self.back_button.place(x=screen_width//2, y=screen_height - 100, anchor="center")
 
-        # Populate listbox with current names
+        # Update name list
         self.update_listbox()
 
-        # Allow resizing of the window
-        self.window.resizable(True, True)
+
 
     def update_listbox(self):
-        """Update the listbox with current names"""
+        """Update list with names"""
         self.name_listbox.delete(0, tk.END)
         for name in self.names:
             self.name_listbox.insert(tk.END, name)
@@ -100,26 +91,26 @@ class NameEditorApp:
         """Add a new name to the list"""
         name = self.add_name_entry.get()
         if name and name not in self.fodboldtur:
-            self.fodboldtur[name] = 0  # Add the name with initial payment 0
+            self.fodboldtur[name] = 0
             self.names.append(name)
             self.update_listbox()
-            self.parent.gemFilen()  # Save updated data to file
+            self.parent.gemFilen()
         self.add_name_entry.delete(0, tk.END)
 
     def edit_name(self, event):
-        """Edit an existing name"""
+        """Rename a name"""
         selected = self.name_listbox.curselection()
         if selected:
             old_name = self.name_listbox.get(selected)
             new_name = simpledialog.askstring("Rediger navn", f"Ændr navn '{old_name}':", initialvalue=old_name)
             if new_name and new_name not in self.fodboldtur:
-                self.fodboldtur[new_name] = self.fodboldtur.pop(old_name)  # Rename in fodboldtur
+                self.fodboldtur[new_name] = self.fodboldtur.pop(old_name)  # Rename people in indstillinger
                 self.names[selected[0]] = new_name
                 self.update_listbox()
                 self.parent.gemFilen()  # Save updated data to file
 
     def delete_member(self):
-        """Remove selected member from the list"""
+        """Remove member"""
         selected = self.name_listbox.curselection()
         if selected:
             member_name = self.name_listbox.get(selected)
@@ -128,8 +119,8 @@ class NameEditorApp:
             self.update_listbox()
             self.parent.gemFilen()  # Save updated data to file
 
-    def edit_price(self):
-        """Edit the price per member"""
+    def edit_price(self): #TODO make it overwrite the hardcoded 4500
+        """Change price pr member"""
         new_price = simpledialog.askinteger("Rediger pris", "Indtast ny pris pr medlem:", initialvalue=self.dkk_pr_medlem)
         if new_price is not None:
             self.dkk_pr_medlem = new_price
@@ -140,6 +131,6 @@ class NameEditorApp:
 
     def close_window(self):
         """Save data and close the window"""
-        self.parent.update_target()  # Update the progress bar in the main window
-        self.parent.gemFilen()  # Save data to file
+        self.parent.update_target()  # Update progressbar
+        self.parent.gemFilen()
         self.window.destroy()
