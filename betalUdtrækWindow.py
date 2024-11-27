@@ -16,6 +16,8 @@ class payWindowClass:
 
         # Bottom
 
+        Button(self.payWindow, text="Tilbage", command=self.payWindow.destroy).pack(side=BOTTOM)
+
         scrollbar = Scrollbar(self.payWindow)
         scrollbar.pack(side=RIGHT, fill=Y)
 
@@ -34,7 +36,7 @@ class payWindowClass:
         # Left
         self.valgtPerson = StringVar()
         # TODO: sortere liste alfabetisk
-        self.options = [p for p in self.master.fodboldtur]
+        self.options = sorted([p for p in self.master.fodboldtur])
         self.valgtPerson.set("Vælg person")
 
         self.drop = OptionMenu(self.payWindow, self.valgtPerson, *self.options, command=lambda person: self.updateInfo(person))
