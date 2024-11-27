@@ -103,4 +103,4 @@ class mainWindow:
 if __name__ == '__main__':
     main = mainWindow()
 
-print("Nicolas Jackson In Action With The Cold Reaction")
+print("Nicolas Jackson In Action With The Cold Reaction🐐")
