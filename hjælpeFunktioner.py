@@ -17,17 +17,18 @@ from tkinter import *
 from tkinter.ttk import Treeview
 import pandas as pd
 class MakeTree:
-    def __init__(self, master, df: pd.DataFrame):
+    def __init__(self, master, df: pd.DataFrame = pd.DataFrame(), side=None):
         self.master = master
         self.df = df
         self.l1 = list(self.df)  # list of columns
         self.order = True
 
         self.trv = Treeview(self.master, selectmode='browse', show="headings", height=10, columns=self.l1)
-        self.trv.pack()
+        self.trv.pack(side=side)
 
     # fylder tabel med information
     def my_disp(self):
+        self.trv.delete(*self.trv.get_children())
         r_set = self.df.to_numpy().tolist()
         for col in self.l1:
             self.trv.column(col, width=200, anchor='w')
@@ -42,6 +43,5 @@ class MakeTree:
         else:
             self.order = True
         self.df = self.df.sort_values([col], ascending=self.order)
-        self.trv.delete(*self.trv.get_children())
         self.my_disp()
 

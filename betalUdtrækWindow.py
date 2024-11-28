@@ -1,9 +1,10 @@
 # importing tkinter module
 from tkinter import *
 from tkinter import messagebox
-from datetime import datetime
+import time
 
-
+from hjælpeFunktioner import MakeTree
+import pandas as pd
 
 class payWindowClass:
 
@@ -19,14 +20,7 @@ class payWindowClass:
 
         Button(self.payWindow, text="Tilbage", command=self.payWindow.destroy).pack(side=BOTTOM)
 
-        scrollbar = Scrollbar(self.payWindow)
-        scrollbar.pack(side=RIGHT, fill=Y)
-
-        self.logList = Listbox(self.payWindow, yscrollcommand=scrollbar.set)
-        self.logList.pack(side=BOTTOM)
-
-        scrollbar.config(command=self.logList.yview)
-        Label(self.payWindow, text="Log").pack(side=BOTTOM)
+        self.trv = MakeTree(self.payWindow, pd.DataFrame.from_dict({"Beløb": [], "Dato": []}), BOTTOM)
 
         self.personMoney = StringVar()
         self.personMoney.set("Beløb indbetalt: ---")
@@ -91,13 +85,17 @@ class payWindowClass:
         self.personMoney.set(f"Beløb indbetalt: {self.master.fodboldtur[person]}")
         self.personMoneyLabel.configure(text=self.personMoney.get())
 
-        self.logList.delete(0, END)
-        personLog = self.master.log[person]
-        for i in personLog:
-            self.logList.insert(END, f"{i[0]}, {i[1]}")
+        personLog =self.master.log[person]
+        temp = {"Beløb": [], "Dato": []}
+        for line in personLog:
+            temp["Beløb"].append(line[0])
+            temp["Dato"].append(line[1])
+
+        self.trv.df = pd.DataFrame.from_dict(temp)
+        self.trv.my_disp()
 
     def updateLog(self, person, beløb):
-        self.master.log[person].insert(0, (beløb, datetime.now()))
+        self.master.log[person].insert(0, (beløb, time.strftime("%H:%M | %Y-%m-%d", time.localtime())))
 
 
 
